@@ -124,5 +124,5 @@ void loop() {
     }
   }
 
-  delay(1000); // Attendre 1 seconde avant la prochaine mesure
+  delay(100);
 }
