@@ -9,6 +9,7 @@ DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 int dustPin = 8;
+int ldrPin = A0; // Pin analogique pour la photorésistance
 unsigned long duration;
 unsigned long starttime;
 unsigned long sampletime_ms = 30000;
@@ -25,6 +26,7 @@ float concentrationbefore = 0;
 unsigned long previousMillis = 0;
 const long interval = 5000; // Intervalle de changement d'affichage en millisecondes
 bool showDust = true;
+bool showTempHum = false;
 
 void setup() {
   Serial.begin(9600);
@@ -78,14 +80,20 @@ void loop() {
   float temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
 
+  // Mesure de la luminosité
+  int ldrValue = analogRead(ldrPin);
+  float luminosity = map(ldrValue, 0, 1023, 0, 100); // Conversion en pourcentage de luminosité
+
   // Affichage sur le moniteur série
   Serial.println("Temperature = " + String(temperature) + " °C");
   Serial.println("Humidite = " + String(humidity) + " %");
+  Serial.println("Luminosite = " + String(luminosity) + " %");
 
   // Changement d'affichage sur l'écran LCD toutes les 5 secondes
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
     showDust = !showDust;
+    showTempHum = !showTempHum && !showDust;
 
     lcd.clear();
     if (showDust) {
@@ -110,7 +118,7 @@ void loop() {
       } else {
         lcd.print("Very High");
       }
-    } else {
+    } else if (showTempHum) {
       // Affichage de la température et de l'humidité
       lcd.setCursor(0, 0);
       lcd.print("Temp: ");
@@ -120,6 +128,12 @@ void loop() {
       lcd.setCursor(0, 1);
       lcd.print("Hum: ");
       lcd.print(humidity);
+      lcd.print(" %");
+    } else {
+      // Affichage de la luminosité
+      lcd.setCursor(0, 0);
+      lcd.print("Luminosite: ");
+      lcd.print(luminosity);
       lcd.print(" %");
     }
   }
