@@ -1,55 +1,40 @@
-/* Import the fonts */
-  @font-face {
-    font-family: 'Adumu';
-    src: url('../assets/fonts/adumu.ttf') format('truetype');
-  }
-  
-  @font-face {
-    font-family: 'Oswald';
-    src: url('../assets/fonts/oswald.ttf') format('truetype');
-  }
-  
-  body {
-    font-family: 'Oswald', Arial, sans-serif;
-  }
-  
-  .header {
-    font-family: 'Oswald';
-    display: flex;
-    align-items: center;
-    background-color: #7d9fe1;
-    padding: 20px;
-    position: relative;
-  }
-  
-  .logo {
-    height: 150px; /* Adjust the size as needed */
-    position: absolute;
-    left: 10px;
-    top: 10px;
-    transform: rotate(-10deg);
-  }
-  
-  .header h1 {
-    font-family: 'Adumu', Arial, sans-serif;
-    font-size: 3em;
-    color: #1a3b75;
-    margin: 0 auto;
-    z-index: 2;
-  }
-  
-  .container {
-    text-align: center;
-    margin-top: 50px; /* Adjust to lower the entire container to accommodate the larger logo */
-  }
-  
-  .container h2 {
-    margin-top: 40px;
-  }
-  
-  .cards {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 40px;
-  }
+.header {
+  font-family: 'Oswald';
+  display: flex;
+  align-items: center;
+  background-color: #7d9fe1;
+  padding: 20px;
+  position: relative;
+}
+
+.logo {
+  height: 150px; /* Adjust the size as needed */
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  transform: rotate(-10deg);
+}
+
+.header h1 {
+  font-family: 'Adumu', Arial, sans-serif;
+  font-size: 3em;
+  color: #1a3b75;
+  margin: 0 auto;
+  z-index: 2;
+}
+
+.container {
+  text-align: center;
+  margin-top: 50px; /* Adjust to lower the entire container to accommodate the larger logo */
+}
+
+.container h2 {
+  margin-top: 40px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 40px;
+}
