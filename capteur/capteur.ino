@@ -27,6 +27,7 @@ unsigned long previousMillis = 0;
 const long interval = 5000; // Intervalle de changement d'affichage en millisecondes
 bool showDust = true;
 bool showTempHum = false;
+bool showLight = false;
 
 void setup() {
   Serial.begin(9600);
@@ -82,7 +83,7 @@ void loop() {
 
   // Mesure de la luminosité
   int ldrValue = analogRead(ldrPin);
-  float luminosity = map(ldrValue, 0, 1023, 0, 100); // Conversion en pourcentage de luminosité
+  float luminosity = map(ldrValue, 1023, 0, 0, 100); // Conversion en pourcentage de luminosité
 
   // Affichage sur le moniteur série
   Serial.println("Temperature = " + String(temperature) + " °C");
@@ -91,9 +92,7 @@ void loop() {
 
   // Changement d'affichage sur l'écran LCD toutes les 5 secondes
   if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis;
-    showDust = !showDust;
-    showTempHum = !showTempHum && !showDust;
+    previousMillis = currentMillis; 
 
     lcd.clear();
     if (showDust) {
@@ -103,10 +102,14 @@ void loop() {
       lcd.setCursor(0, 1);
       lcd.print(concentrationsdisplay);
       lcd.print(" pcs/0.01cf");
+      
 
-      lcd.setCursor(0, 2);
+      delay(1000);
+      lcd.clear();
+      
+      lcd.setCursor(0, 0);
       lcd.print("Pollution level:");
-      lcd.setCursor(0, 3);
+      lcd.setCursor(0, 1);
       if (concentrationsdisplay < 400) {
         lcd.print("NO");
       } else if (concentrationsdisplay <= 800) {
@@ -118,6 +121,8 @@ void loop() {
       } else {
         lcd.print("Very High");
       }
+      showDust = false;
+      showTempHum = true;
     } else if (showTempHum) {
       // Affichage de la température et de l'humidité
       lcd.setCursor(0, 0);
@@ -129,12 +134,17 @@ void loop() {
       lcd.print("Hum: ");
       lcd.print(humidity);
       lcd.print(" %");
-    } else {
+      showTempHum = false;
+      showLight = true;
+    } else if(showLight) {
       // Affichage de la luminosité
       lcd.setCursor(0, 0);
       lcd.print("Luminosite: ");
+      lcd.setCursor(0,1);
       lcd.print(luminosity);
       lcd.print(" %");
+      showLight = false;
+      showDust = true;
     }
   }
 
