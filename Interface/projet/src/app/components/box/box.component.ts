@@ -15,4 +15,31 @@ export class BoxComponent {
     console.log(`Afficher plus de données pour ${this.type}`);
     // Logique pour afficher plus de données spécifiques au type
   }
+
+  getInstantText(): string {
+    switch (this.type) {
+      case 'Température':
+        return 'Température<br>instantanée :<br>';
+      case 'Poussière':
+        return 'Taux de poussière<br>instantané :<br>';
+      case 'Lumière':
+        return 'Luminosité instantanée :<br>';
+      default:
+        return 'Instantanée';
+    }
+  }
+
+  getInstantText2(): string {
+    switch (this.type) {
+      case 'Température':
+        return 'Température<br>moyenne / j :<br>';
+      case 'Poussière':
+        return 'Taux de poussière<br>moyen / j :<br>';
+      case 'Lumière':
+        return 'Luminosité moyenne / j :<br>';
+      default:
+        return 'Instantanée';
+    }
+  }
+
 }

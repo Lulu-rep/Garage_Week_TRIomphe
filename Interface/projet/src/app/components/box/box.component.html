@@ -2,8 +2,7 @@
     <div class="box-header">
       <h2>{{ type }}</h2>
     </div>
-    <p>{{ type }} moyenne / j : {{ averageValue }}</p>
-    <p>Instantanée: {{ instantValue }}</p>
+    <p [innerHTML]="getInstantText2()  + averageValue"></p>
+    <p [innerHTML]="getInstantText() + instantValue"></p>
     <button (click)="showMore()">Plus de données</button>
   </div>
-  

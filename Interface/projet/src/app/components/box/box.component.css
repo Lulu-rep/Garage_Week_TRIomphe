@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
   height: 60px; /* Hauteur de la partie arrondie */
-  width: calc(100% + 40px); /* Ajustement de la largeur pour couvrir les bords */
+  width:100%; /* Ajustement de la largeur pour couvrir les bords */
   margin: -20px -20px 0 -20px; /* Ajustement des marges pour compenser le padding */
   padding: 0 20px; /* Padding pour la section arrondie */
   background-color: #d9e6fa; /* Même couleur que le fond de la boîte */
