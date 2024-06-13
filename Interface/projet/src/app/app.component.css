@@ -1,12 +1,12 @@
 /* Import the fonts */
-@font-face {
+  @font-face {
     font-family: 'Adumu';
-    src: url('assets/fonts/adumu.ttf') format('truetype');
+    src: url('../assets/fonts/adumu.ttf') format('truetype');
   }
   
   @font-face {
     font-family: 'Oswald';
-    src: url('assets/fonts/oswald.ttf') format('truetype');
+    src: url('../assets/fonts/oswald.ttf') format('truetype');
   }
   
   body {
@@ -49,47 +49,7 @@
   
   .cards {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     margin-top: 40px;
   }
-  
-  .card {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 200px;
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .card h3 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 10px;
-  }
-  
-  li {
-    margin: 5px 0;
-  }
-  
-  button {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px 10px;
-    cursor: pointer;
-    align-self: center;
-  }
-  
-  button:hover {
-    background-color: #e0e0e0;
-  }
-  

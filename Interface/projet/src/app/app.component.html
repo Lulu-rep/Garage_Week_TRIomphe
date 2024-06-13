@@ -5,29 +5,8 @@
 <div class="container">
   <h2>Analyses de la machine à Tri Optique :</h2>
   <div class="cards">
-    <div class="card">
-      <h3>Température</h3>
-      <ul>
-        <li>Moyenne /j : </li>
-        <li>Température instantanée : </li>
-      </ul>
-      <button>+ de données</button>
-    </div>
-    <div class="card">
-      <h3>Poussière</h3>
-      <ul>
-        <li>Moyenne /j :</li>
-        <li>Taux de poussière instantané :</li>
-      </ul>
-      <button>+ de données</button>
-    </div>
-    <div class="card">
-      <h3>Lumière</h3>
-      <ul>
-        <li>Moyenne /j :</li>
-        <li>Luminosité instantanée :</li>
-      </ul>
-      <button>+ de données</button>
-    </div>
+      <app-box [type]="'Température'" [averageValue]="25.5" [instantValue]="27.8"></app-box>
+      <app-box [type]="'Poussière'" [averageValue]="35" [instantValue]="38"></app-box>
+      <app-box [type]="'Lumière'" [averageValue]="800" [instantValue]="850"></app-box>
   </div>
 </div>

@@ -6,7 +6,7 @@
   
   @font-face {
     font-family: 'Oswald';
-    src: url('assets/fonts/oswald.ttf') format('truetype');
+    src: url('assets/fonts/glacial.otf') format('truetype');
   }
   
   body {
@@ -81,6 +81,7 @@
   }
   
   button {
+    font-family: 'Oswald';
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 4px;
