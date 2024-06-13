@@ -5,10 +5,20 @@
  
 @font-face {
   font-family: 'Oswald';
-  src: url('./assets/fonts/oswald.ttf') format('truetype');
+  src: url('./assets/fonts/glacial.otf') format('truetype');
 }
  
-body {
+html, body {
   font-family: 'Oswald', Arial, sans-serif;
-  margin: 0;
+  background-color: #f9fbff; /* Couleur de fond noire */
+  color: #000; /* Couleur du texte par défaut en blanc pour contraste */
+  height: 100%;
+  margin: 0; /* Supprimer les marges par défaut */
+  padding: 0; /* Supprimer les paddings par défaut */
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Assure que le conteneur couvre toute la hauteur de la fenêtre */
 }

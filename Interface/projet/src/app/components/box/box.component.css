@@ -1,37 +1,57 @@
 .box {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 200px;
-    margin: 10px;
-    padding: 10px;
-    box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
+  border: 2px solid #000; /* Bordure plus épaisse */
+  border-radius: 20px; /* Coins plus arrondis */
+  width: 180px;
+  height: 300px; /* Hauteur fixe pour toutes les boîtes */
+  margin: 10px;
+  padding: 20px; /* Plus de padding pour espacer les éléments */
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #EFF5FF; /* Couleur de fond blanche */
+  position: relative;
+  overflow: hidden;
+}
+
+.box-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px; /* Hauteur de la partie arrondie */
+  width: calc(100% + 40px); /* Ajustement de la largeur pour couvrir les bords */
+  margin: -20px -20px 0 -20px; /* Ajustement des marges pour compenser le padding */
+  padding: 0 20px; /* Padding pour la section arrondie */
+  background-color: #d9e6fa; /* Même couleur que le fond de la boîte */
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom: 2px solid #000; /* Bordure en bas pour délimiter */
+  text-align: center;
+}
+
 .box h2 {
-font-size: 1.2em;
-margin-bottom: 10px;
+  font-size: 1.5em; /* Police plus grande */
+  margin: 0; /* Supprimer le margin pour aligner correctement */
+  padding: 0; /* Supprimer le padding pour aligner correctement */
 }
 
 p {
-list-style-type: none;
-padding: 0;
-margin-bottom: 10px;
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 20px; /* Plus d'espace en bas */
+  text-align: center; /* Centrer le texte */
 }
 
-
 button {
-background-color: #f0f0f0;
-border: 1px solid #ccc;
-border-radius: 4px;
-padding: 5px 10px;
-cursor: pointer;
-align-self: center;
+  background-color: #f9fbff; /* Couleur de fond blanche */
+  border: 2px solid #000; /* Bordure plus épaisse et contrastée */
+  border-radius: 20px; /* Coins arrondis pour le bouton */
+  padding: 10px 20px; /* Plus de padding pour un bouton plus grand */
+  cursor: pointer;
+  align-self: center;
+  text-align: center; /* Centrer le texte */
 }
 
 button:hover {
-background-color: #e0e0e0;
+  background-color: #e4ecfa; /* Fond plus sombre au survol */
 }
-  
