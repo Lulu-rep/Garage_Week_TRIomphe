@@ -1,6 +1,7 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
+#include <SoftwareSerial.h>
 
 #define DHTPIN 2
 #define DHTTYPE DHT11
@@ -9,7 +10,7 @@ DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 int dustPin = 8;
-int ldrPin = A0; // Pin analogique pour la photorésistance
+int ldrPin = A0;  // Pin analogique pour la photorésistance
 unsigned long duration;
 unsigned long starttime;
 unsigned long sampletime_ms = 30000;
@@ -24,13 +25,21 @@ float concentration4 = 0;
 float concentrationbefore = 0;
 
 unsigned long previousMillis = 0;
-const long interval = 5000; // Intervalle de changement d'affichage en millisecondes
+const long interval = 5000;  // Intervalle de changement d'affichage en millisecondes
 bool showDust = true;
 bool showTempHum = false;
 bool showLight = false;
 
+SoftwareSerial BTSerial(10, 11);  // RX, TX pour le Bluetooth (exemple)
+
+float temperature;
+float humidity;
+float luminosity;
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(38400);    // Initialise la communication série pour le débogage (USB)
+  BTSerial.begin(38400);  // Initialise la communication Bluetooth
+
   pinMode(dustPin, INPUT);
   starttime = millis();
 
@@ -42,6 +51,21 @@ void setup() {
 
 void loop() {
   unsigned long currentMillis = millis();
+
+  if (Serial.available()) {
+    String command = Serial.readString();
+    Serial.print(command);
+    if (command.startsWith("AT")) {
+      Serial.println("AT Command");
+      delay(100);
+      BTSerial.println(command);
+      delay(100);
+    }
+    while (BTSerial.available() > 0) {
+      command += (char)BTSerial.read();
+    }
+    Serial.println(command);
+  }
 
   // Mesure de la poussière
   duration = pulseIn(dustPin, LOW);
@@ -60,39 +84,38 @@ void loop() {
     concentration1 = concentration;
     concentrationsdisplay = (concentration1 + concentration2 + concentration3 + concentration4) / 4;
 
-    Serial.println("------------------------------");
-    Serial.println("concentrationsdisplay");
-    Serial.println(concentrationsdisplay);
-    Serial.println("concentration1");
-    Serial.println(concentration1);
-    Serial.println("concentration2");
-    Serial.println(concentration2);
-    Serial.println("concentration3");
-    Serial.println("concentration3");
-    Serial.println("concentration4");
-    Serial.println("concentration4");
-
     lowpulseoccupancy = 0;
     starttime = millis();
     concentrationbefore = concentrationsdisplay;
   }
 
   // Mesure de la température et de l'humidité
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
+  temperature = dht.readTemperature();
+  humidity = dht.readHumidity();
 
   // Mesure de la luminosité
   int ldrValue = analogRead(ldrPin);
-  float luminosity = map(ldrValue, 1023, 0, 0, 100); // Conversion en pourcentage de luminosité
+  luminosity = map(ldrValue, 1023, 0, 0, 100);  // Conversion en pourcentage de luminosité
 
-  // Affichage sur le moniteur série
-  Serial.println("Temperature = " + String(temperature) + " °C");
-  Serial.println("Humidite = " + String(humidity) + " %");
-  Serial.println("Luminosite = " + String(luminosity) + " %");
+  // Envoi des valeurs lues par les capteurs au terminal pour le débogage
+  Serial.print("Temperature: ");
+  Serial.println(temperature);
+  Serial.print("Humidity: ");
+  Serial.println(humidity);
+  Serial.print("Luminosity: ");
+  Serial.println(luminosity);
+  Serial.print("Concentration: ");
+  Serial.println(concentrationsdisplay);
+
+  // Envoi des valeurs via Bluetooth pour l'affichage sur un terminal distant
+  sendValue(temperature);
+  sendValue(humidity);
+  sendValue(concentrationsdisplay);
+  sendValue(luminosity);
 
   // Changement d'affichage sur l'écran LCD toutes les 5 secondes
   if (currentMillis - previousMillis >= interval) {
-    previousMillis = currentMillis; 
+    previousMillis = currentMillis;
 
     lcd.clear();
     if (showDust) {
@@ -102,25 +125,7 @@ void loop() {
       lcd.setCursor(0, 1);
       lcd.print(concentrationsdisplay);
       lcd.print(" pcs/0.01cf");
-      
 
-      delay(1000);
-      lcd.clear();
-      
-      lcd.setCursor(0, 0);
-      lcd.print("Pollution level:");
-      lcd.setCursor(0, 1);
-      if (concentrationsdisplay < 400) {
-        lcd.print("NO");
-      } else if (concentrationsdisplay <= 800) {
-        lcd.print("Very Low");
-      } else if (concentrationsdisplay <= 1500) {
-        lcd.print("Low");
-      } else if (concentrationsdisplay <= 2500) {
-        lcd.print("Medium");
-      } else {
-        lcd.print("Very High");
-      }
       showDust = false;
       showTempHum = true;
     } else if (showTempHum) {
@@ -134,19 +139,26 @@ void loop() {
       lcd.print("Hum: ");
       lcd.print(humidity);
       lcd.print(" %");
+
       showTempHum = false;
       showLight = true;
-    } else if(showLight) {
+    } else if (showLight) {
       // Affichage de la luminosité
       lcd.setCursor(0, 0);
       lcd.print("Luminosite: ");
-      lcd.setCursor(0,1);
+      lcd.setCursor(0, 1);
       lcd.print(luminosity);
       lcd.print(" %");
+
       showLight = false;
       showDust = true;
     }
   }
 
+  delay(1000);
+}
+
+void sendValue(float value) {
+  BTSerial.println(value, 1); // Envoi avec un chiffre après la virgule
   delay(100);
 }
