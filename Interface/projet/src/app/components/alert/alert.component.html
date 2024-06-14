@@ -5,12 +5,12 @@
   <div class="container">
     <h2>Analyses de la machine à Tri Optique :</h2>
     <div class="cards">
-      <app-box 
+      <alert-box 
         [type]="'Alerte !'" 
         [message]="'Anomalie au niveau de la'" 
         [message2]="'Veuillez faire le nécessaire'"
-        [options]="['Option 1', 'Option 2', 'Option 3']">
-      </app-box>
+        [anomalies]="['Temperature', 'Poussière', 'Lumière']">
+      </alert-box>
     </div>
   </div>
   
