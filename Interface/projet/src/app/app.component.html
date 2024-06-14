@@ -5,16 +5,8 @@
 <div class="container">
   <h2>Analyses de la machine à Tri Optique :</h2>
   <div class="cards">
-      <app-box [type]="'Température'" [averageValue]="25.5" [instantValue]="sensorDatas[0].temperature"></app-box>
-      <app-box [type]="'Poussière'" [averageValue]="35" [instantValue]="sensorDatas[0].dust"></app-box>
-      <app-box [type]="'Lumière'" [averageValue]="800" [instantValue]="sensorDatas[0].light"></app-box>
+      <app-box [type]="'Température'" [averageValue]="averageTemperature" [instantValue]="sensorDatas[0].temperature"></app-box>
+      <app-box [type]="'Poussière'" [averageValue]="averageDust" [instantValue]="sensorDatas[0].dust"></app-box>
+      <app-box [type]="'Lumière'" [averageValue]="averageLight" [instantValue]="sensorDatas[0].light"></app-box>
   </div>
-  <!-- <div *ngFor="let data of sensorDatas">
-      <p>ID: {{ data._id }}</p>
-      <p>Temperature: {{ data.temperature }}</p>
-      <p>Humidity: {{ data.humidity }}</p>
-      <p>Dust: {{ data.dust }}</p>
-      <p>Light: {{ data.light }}</p>
-      <p>Date: {{ data.date }}</p>
-  </div> -->
 </div>
