@@ -2,18 +2,21 @@
 #include <LiquidCrystal_I2C.h>
 #include "DHT.h"
 #include <SoftwareSerial.h>
+#include <ArduinoJson.h>
 
-#define DHTPIN 2
-#define DHTTYPE DHT11
-#define LEDTemp 7
-#define LEDDust 6
-#define LEDLight 5
+#define DHTPIN 2    // Pin de données du capteur DHT11 (température et humidité)
+#define DHTTYPE DHT11  // Type de capteur DHT11 (température et humidité)
+#define LEDTemp 7 // Pin pour la LED de température
+#define LEDDust 6 // Pin pour la LED de poussière
+#define LEDLight 5  // Pin pour la LED de luminosité
 
 DHT dht(DHTPIN, DHTTYPE);
+// Adresse I2C de l'écran LCD et format (16 colone et 2 lignes pour le modèle 16x2)
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-int dustPin = 8;
+int dustPin = 8; // Pin numérique pour la mesure de la poussière
 int ldrPin = A0;  // Pin analogique pour la photorésistance
+// Variables pour la mesure de la poussière
 unsigned long duration;
 unsigned long starttime;
 unsigned long sampletime_ms = 30000;
@@ -31,11 +34,13 @@ float concentrationbefore = 0;
 
 unsigned long previousMillis = 0;
 const long interval = 5000;  // Intervalle de changement d'affichage en millisecondes
+
+// Variables pour l'affichage des capteurs
 bool showDust = true;
 bool showTempHum = false;
 bool showLight = false;
 
-SoftwareSerial BTSerial(10, 11);  // RX, TX pour le Bluetooth (exemple)
+SoftwareSerial BTSerial(10, 11);  // RX, TX pour le Bluetooth (A brancher sur le module HC-05 avec RXD sur TXD et TXD sur RXD)
 
 float temperature;
 float humidity;
@@ -45,13 +50,14 @@ void setup() {
   Serial.begin(38400);    // Initialise la communication série pour le débogage (USB)
   BTSerial.begin(38400);  // Initialise la communication Bluetooth
 
-  pinMode(dustPin, INPUT);
-  starttime = millis();
+  pinMode(dustPin, INPUT); // Pin pour la mesure de la poussière
+  starttime = millis(); // Initialisation du temps de démarrage
 
-  pinMode(LEDTemp, OUTPUT);
-  pinMode(LEDDust, OUTPUT);
-  pinMode(LEDLight, OUTPUT);
+  pinMode(LEDTemp, OUTPUT); // Pin pour la LED de température
+  pinMode(LEDDust, OUTPUT); // Pin pour la LED de poussière
+  pinMode(LEDLight, OUTPUT); // Pin pour la LED de luminosité
 
+  // Initialisation de l'écran LCD
   lcd.init();
   lcd.backlight();
 
@@ -61,6 +67,7 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();
 
+  // Lecture des commandes AT via le terminal série et envoi au module Bluetooth
   if (Serial.available()) {
     String command = Serial.readString();
     Serial.print(command);
@@ -80,6 +87,7 @@ void loop() {
   duration = pulseIn(dustPin, LOW);
   lowpulseoccupancy += duration;
 
+  // Calcul de la concentration de poussière
   if ((currentMillis - starttime) > sampletime_ms) {
     ratio = lowpulseoccupancy / (sampletime_ms * 10.0);
     concentration = 1.1 * pow(ratio, 3) - 3.8 * pow(ratio, 2) + 520 * ratio + 0.62;
@@ -109,18 +117,15 @@ void loop() {
   // Envoi des valeurs lues par les capteurs au terminal pour le débogage
   Serial.print("Temperature: ");
   Serial.println(temperature);
-  Serial.print("Humidity: ");
+  Serial.print("Humidite: ");
   Serial.println(humidity);
-  Serial.print("Luminosity: ");
+  Serial.print("Luminosite: ");
   Serial.println(luminosity);
   Serial.print("Concentration: ");
   Serial.println(concentrationsdisplay);
 
   // Envoi des valeurs via Bluetooth pour l'affichage sur un terminal distant
-  sendValue(temperature);
-  sendValue(humidity);
-  sendValue(concentrationsdisplay);
-  sendValue(luminosity);
+  sendValue(temperature,humidity, concentrationsdisplay, luminosity);
 
   // Changement d'affichage sur l'écran LCD toutes les 5 secondes
   if (currentMillis - previousMillis >= interval) {
@@ -164,6 +169,7 @@ void loop() {
     }
   }
 
+  // Allumage des LEDs en fonction des valeurs des capteurs
   if(temperature > 30) {
     digitalWrite(LEDTemp, HIGH);
   } else {
@@ -183,7 +189,20 @@ void loop() {
   delay(1000);
 }
 
-void sendValue(float value) {
-  BTSerial.println(value, 1); // Envoi avec un chiffre après la virgule
+// Fonction pour envoyer les valeurs des capteurs via Bluetooth
+void sendValue(float temperature,float humidity, float concentrationsdisplay, float luminosity) {
+  // Création d'un objet JSON pour l'envoi des valeurs
+  StaticJsonDocument<200> doc;
+  // Ajout des valeurs des capteurs dans l'objet JSON correspondant format de la basse de données
+  doc["temperature"] = temperature;
+  doc["humidity"] = humidity;
+  doc["dust"] = concentrationsdisplay;
+  doc["light"] = luminosity;
+
+  // Conversion de l'objet JSON en chaîne de caractères et envoi via Bluetooth
+  String output;
+  serializeJson(doc, output);
+
+  BTSerial.println(output);
   delay(100);
 }

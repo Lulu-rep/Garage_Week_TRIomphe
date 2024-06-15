@@ -1,74 +1,71 @@
-const WebSocket = require("ws");
-const { SerialPort } = require("serialport");
-const express = require("express");
+const axios = require('axios'); // Importez axios
+const MongoClient = require('mongodb').MongoClient;
+const {SerialPort} = require('serialport')
+const WebSocket = require('ws');
 
-const server = new WebSocket.Server({ port: 8080 }); // Port WebSocket
-
-// Création de la connexion série avec l'Arduino
-const arduinoSerial = new SerialPort({ path: "COM8", baudRate: 38400 });
-
+// URL de connexion à la base de données MongoDB
+let url = 'mongodb://127.0.0.1:27017/sensorDataDB';
+let lastReceivedData = '';
 let currentSocket = null;
-let lastReceivedData = ""; // Initialisez la variable
 
-// Ouverture de la connexion série
-arduinoSerial.on("open", () => {
-  console.log("Serial port open");
+const arduinoSerial = new SerialPort({ path: "COM7", baudRate: 38400 }); // Remplacez "COM7" par le port série de votre Arduino pour le bluetooth
 
-  // Réception des données série depuis l'Arduino
-  arduinoSerial.on("data", (data) => {
-    const dataString = data.toString();
-    lastReceivedData += dataString; // Concaténez le message à la dernière donnée reçue
+// Connexion à la base de données MongoDB
+MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((client) => {
+    console.log('Connected to MongoDB');
+    const db = client.db("sensorDataDB");
+    const collection = db.collection("devices");
 
-    // Si le message se termine par un caractère de fin de ligne, traitez-le comme une chaîne complète
-    if (dataString.endsWith("\n")) {
-      console.log(`Données reçues de l'Arduino : ${lastReceivedData.trim()}`);
-      if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
-        currentSocket.send(lastReceivedData.trim());
-      }
-      lastReceivedData = ""; // Réinitialisez la dernière donnée reçue
-    }
-  });
-});
+    // Ouverture de la connexion série
+    arduinoSerial.on("open", () => {
+      console.log("Serial port open");
 
-// Connexion WebSocket
-server.on("connection", (socket) => {
-  console.log("WebSocket client connected");
-  currentSocket = socket;
+      // Réception des données série depuis l'Arduino
+      arduinoSerial.on("data", (data) => {
+        const dataString = data.toString();
+        lastReceivedData += dataString; // Concaténez le message à la dernière donnée reçue
+      
+        // Si le message se termine par un caractère de fin de ligne, traitez-le comme une chaîne complète
+        if (dataString.endsWith("\n")) {
+          console.log(`Données reçues de l'Arduino : ${lastReceivedData.trim()}`);
+          if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
+            currentSocket.send(lastReceivedData.trim());
+          }
+      
+          // Parsing des données JSON et envoi à la base de données
+          try {
+            const jsonData = JSON.parse(lastReceivedData.trim());
+          
+            // envoie de la requête POST à l'API avec les données JSON
+            axios.post('http://localhost:3000/post-data', jsonData)
+              .then(response => {
+                console.log('Data sent to API:', response.data);
+              })
+              .catch(error => {
+                console.error('Failed to send data to API:', error);
+              });
 
-  // Gestion des erreurs WebSocket
-  socket.on("error", (err) => {
-    console.error("WebSocket error:", err);
-  });
+            // Insertion des données dans MongoDB
+            collection.insertOne(jsonData)
+              .then(result => {
+                console.log('Data inserted into MongoDB:', result);
+              })
+              .catch(error => {
+                console.error('Failed to insert data into MongoDB:', error);
+              });
 
-  // Gestion de la fermeture de la connexion WebSocket
-  socket.on("close", () => {
-    console.log("WebSocket client disconnected");
-    currentSocket = null;
-  });
-});
-
-// Gestion des erreurs de connexion série
-arduinoSerial.on("error", (err) => {
-  console.error("Error with serial port:", err);
-});
-
-// Gestion des erreurs du serveur WebSocket
-server.on("error", (err) => {
-  console.error("WebSocket server error:", err);
-});
-
-console.log("WebSocket server running on port 8080");
-
-// Serveur HTTP pour obtenir les dernières données reçues de l'Arduino
-const httpServer = express();
-httpServer.get("/", (req, res) => {
-  res.send(
-    `Dernières données reçues de l'Arduino : ${
-      lastReceivedData || "Aucune donnée reçue de l'Arduino pour le moment"
-    }`
-  );
-});
-
-httpServer.listen(3001, () => {
-  console.log("Serveur HTTP en écoute sur le port 3001");
-});
+            // Reset lastReceivedData
+            lastReceivedData = '';
+          } catch (error) {
+            console.error('Failed to parse JSON data:', error);
+          }
+        }
+      });
+    });
+    // Gestion des erreurs de connexion série
+    arduinoSerial.on('error', function(err) {
+      console.log('Erreur avec le port série : ', err.message);
+    })
+  })
+  .catch((error) => console.error('Failed to connect to MongoDB', error));
