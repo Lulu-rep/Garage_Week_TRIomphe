@@ -1,12 +1,2 @@
-<div class="header">
-  <img src="assets/images/logo.png" alt="Tri Optique Logo" class="logo">
-  <h1>MainTRIance</h1>
-</div>
-<div class="container">
-  <h2>Analyses de la machine à Tri Optique :</h2>
-  <div class="cards">
-      <app-box [type]="'Température'" [averageValue]="averageTemperature" [instantValue]="sensorDatas[0].temperature"></app-box>
-      <app-box [type]="'Poussière'" [averageValue]="averageDust" [instantValue]="sensorDatas[0].dust"></app-box>
-      <app-box [type]="'Lumière'" [averageValue]="averageLight" [instantValue]="sensorDatas[0].light"></app-box>
-  </div>
-</div>
+<app-header></app-header>
+<router-outlet></router-outlet>

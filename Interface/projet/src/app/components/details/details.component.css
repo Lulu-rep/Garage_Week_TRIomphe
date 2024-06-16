@@ -1,0 +1,15 @@
+.container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.container h2 {
+  margin-top: 40px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 40px;
+}

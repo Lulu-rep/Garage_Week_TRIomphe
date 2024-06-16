@@ -1,0 +1,41 @@
+.header {
+  font-family: "Oswald";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #7d9fe1;
+  padding: 20px;
+  position: relative;
+}
+
+.logo {
+  height: 150px; /* Adjust the size as needed */
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  transform: rotate(-10deg);
+}
+
+.header h1 {
+  font-family: "Adumu", Arial, sans-serif;
+  font-size: 3em;
+  color: #1a3b75;
+  margin: 0;
+  z-index: 2;
+}
+
+.logout-button {
+  width: auto;
+  margin: 0 20px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #d02816;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #e74c3c;
+}

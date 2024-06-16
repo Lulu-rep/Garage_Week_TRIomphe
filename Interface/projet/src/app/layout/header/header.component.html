@@ -1,0 +1,11 @@
+<div class="header">
+  <img src="assets/images/logo.png" alt="Tri Optique Logo" class="logo" />
+  <h1 class="header-title">MainTRIance</h1>
+  <input
+    class="logout-button"
+    type="button"
+    value="Se déconnecter"
+    *ngIf="!isLoginPage()"
+    (click)="logout()"
+  />
+</div>

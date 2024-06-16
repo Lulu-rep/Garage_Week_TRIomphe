@@ -1,0 +1,12 @@
+<div class="machine-list-container">
+  <h2>Liste des machines</h2>
+  <ul class="machine-list">
+    <li *ngFor="let machine of machines" class="machine-item">
+      <div class="machine-info">
+        <h3>{{ machine.name }}</h3>
+        <p>ID: {{ machine._id }}</p>
+        <button (click)="viewDetails(machine._id)">Accéder</button>
+      </div>
+    </li>
+  </ul>
+</div>

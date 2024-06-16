@@ -31,7 +31,17 @@ export interface SensorData {
     _id?:string;
     temperature:number;
     humidity:number;
-    light: number;
-    dust: number;
-    date: Date;
+    light:number;
+    dust:number;
+    date:Date;
+}
+
+export interface Machine {
+  _id:string;
+  name:string;
+}
+
+export interface User {
+  login:string;
+  password:string;
 }
