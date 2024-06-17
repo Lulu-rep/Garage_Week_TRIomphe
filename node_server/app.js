@@ -1,12 +1,10 @@
 const axios = require('axios'); // Importez axios
 const MongoClient = require('mongodb').MongoClient;
 const {SerialPort} = require('serialport')
-const WebSocket = require('ws');
 
 // URL de connexion à la base de données MongoDB
 let url = 'mongodb://127.0.0.1:27017/sensorDataDB';
-let lastReceivedData = '';
-let currentSocket = null;
+let lastReceivedData = ''; // Stockez la dernière donnée reçue
 
 const arduinoSerial = new SerialPort({ path: "COM7", baudRate: 38400 }); // Remplacez "COM7" par le port série de votre Arduino pour le bluetooth
 
@@ -29,9 +27,6 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
         // Si le message se termine par un caractère de fin de ligne, traitez-le comme une chaîne complète
         if (dataString.endsWith("\n")) {
           console.log(`Données reçues de l'Arduino : ${lastReceivedData.trim()}`);
-          if (currentSocket && currentSocket.readyState === WebSocket.OPEN) {
-            currentSocket.send(lastReceivedData.trim());
-          }
       
           // Parsing des données JSON et envoi à la base de données
           try {
@@ -44,15 +39,6 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
               })
               .catch(error => {
                 console.error('Failed to send data to API:', error);
-              });
-
-            // Insertion des données dans MongoDB
-            collection.insertOne(jsonData)
-              .then(result => {
-                console.log('Data inserted into MongoDB:', result);
-              })
-              .catch(error => {
-                console.error('Failed to insert data into MongoDB:', error);
               });
 
             // Reset lastReceivedData
