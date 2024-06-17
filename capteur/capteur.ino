@@ -17,13 +17,13 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 int dustPin = 8; // Pin numérique pour la mesure de la poussière
 int ldrPin = A0;  // Pin analogique pour la photorésistance
 // Variables pour la mesure de la poussière
-unsigned long duration;
+unsigned long duration; // Durée de la mesure
 unsigned long starttime;
-unsigned long sampletime_ms = 30000;
-unsigned long lowpulseoccupancy = 0;
+unsigned long sampletime_ms = 30000; // Durée de l'échantillonnage
+unsigned long lowpulseoccupancy = 0; // Occupation de la basse fréquence
 float ratio = 0;
 
-
+// Variables pour la concentration de poussière
 float concentration = 0;
 float concentrationsdisplay = 0;
 float concentration1 = 0;
@@ -94,7 +94,7 @@ void loop() {
     if (concentration < 0.63) {
       concentration = concentrationbefore;
     }
-
+    // Moyenne des 4 dernières valeurs de concentration
     concentration4 = concentration3;
     concentration3 = concentration2;
     concentration2 = concentration1;
@@ -175,12 +175,12 @@ void loop() {
   } else {
     digitalWrite(LEDTemp, LOW);
   }
-  if(concentrationsdisplay > 1000) {
+  if(concentrationsdisplay > 2000) {
     digitalWrite(LEDDust, HIGH);
   } else {
     digitalWrite(LEDDust, LOW);
   }
-  if(luminosity < 20) {
+  if(luminosity < 25) {
     digitalWrite(LEDLight, HIGH);
   } else {
     digitalWrite(LEDLight, LOW);
