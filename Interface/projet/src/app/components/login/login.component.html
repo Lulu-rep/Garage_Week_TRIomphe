@@ -1,32 +1,45 @@
 <section class="login-container">
-    <div class="login-card">
-      <form (ngSubmit)="submit()">
-        <div class="login-header">
-          <h2>Authentification</h2>
-          <p>Entrez votre identifiant et votre mot de passe</p>
-          <div *ngIf="error" class="error-message">Erreur lors de la tentative d'authentification</div>
+  <div class="login-card">
+    <form (ngSubmit)="submit()">
+      <div class="login-header">
+        <h2>Authentification</h2>
+        <p>Entrez votre identifiant et votre mot de passe</p>
+        <div *ngIf="error" class="error-message">
+          Erreur lors de la tentative d'authentification
         </div>
-  
-        <div class="login-body">
-          <div class="input-group">
-            <label for="login">Identifiant de l'employé</label>
-            <input type="text" id="login" name="login" [(ngModel)]="user.login" required />
-          </div>
-  
-          <div class="input-group">
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" [(ngModel)]="user.password" required />
-          </div>
-  
-          <div class="input-group">
-            <button type="submit">Se connecter</button>
-          </div>
+      </div>
+
+      <div class="login-body">
+        <div class="input-group">
+          <label for="login">Identifiant de l'employé</label>
+          <input
+            type="text"
+            id="login"
+            name="login"
+            [(ngModel)]="user.login"
+            required
+          />
         </div>
-  
-        <div class="login-footer">
-          <a href="#!">Mot de passe oublié?</a>
+
+        <div class="input-group">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="user.password"
+            required
+          />
         </div>
-      </form>
-    </div>
-  </section>
-  
+
+        <div class="input-group">
+          <button type="submit">Se connecter</button>
+        </div>
+      </div>
+
+      <div class="login-footer">
+        <a href="/">Mot de passe oublié?</a>
+      </div>
+    </form>
+  </div>
+</section>
