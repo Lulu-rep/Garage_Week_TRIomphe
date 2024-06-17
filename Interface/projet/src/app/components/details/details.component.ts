@@ -116,32 +116,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  exportToCSV() {
-    const headers = ['Timestamp', 'Temperature', 'Light', 'Dust'];
-    const rows = this.exceededData.map((sensor) => [
-      sensor.date,
-      sensor.temperature,
-      sensor.light,
-      sensor.dust,
-    ]);
-
-    let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += headers.join(',') + '\n';
-
-    rows.forEach((rowArray) => {
-      const row = rowArray.join(',');
-      csvContent += row + '\n';
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'exceeded_data.csv');
-    document.body.appendChild(link);
-
-    link.click();
-  }
-
   ngOnInit(): void {
     this.userService.isConnected().subscribe((isConnected) => {
       if (!isConnected) {

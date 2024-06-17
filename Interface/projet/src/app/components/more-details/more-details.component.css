@@ -37,3 +37,18 @@ tr:hover {
 thead {
   text-align: center;
 }
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #d9e6fa; 
+  color: black; 
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px; 
+}
+
+button:hover {
+  background-color: #e4ecfa; 
+}
