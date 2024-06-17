@@ -3,9 +3,9 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
 const accountSid = 'ACbb1f1d4fda7a823baccf7ef987d13dd2';
-const authToken = 'db37d513cc6661b317bf5027b326503c';
+const authToken = '';
 const client = require('twilio')(accountSid, authToken);
-*/
+
 const app = express();
 const cors = require("cors");
 
