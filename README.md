@@ -3,13 +3,13 @@ Titre du projet : "MainTRIance"
 Slogan :          "Ensemble, faisons du tri un véritable TRI-omphe pour notre planète !" 
 
 Paragraphe résumant le projet
-" Un projet cherchant à simplifier la maintenance sur les machines de tri optiques de Véolia, en collectant des données pour permettre de signaler les dysfonctionnements avant qu'ils ne se produisent."
+" Un projet cherchant à simplifier la maintenance sur les machines de tri optiques de Véolia, en collectant des données pour permettre de signaler les dysfonctionnements avant qu'ils ne se produisent, fournissant une solution de maintenance préventive et prédictive afin d'optimiser les coûts de maintenance. Permettant ainsi d'améliorer l'éfficacité oppérationelle et la durabilité des équipements"
 
 Démarrage :
 
 Prérequis : 
-    		- Avoir Nodejs et MongoDB d'installé sur sa machine.
-   		 - Avoir Arduino Ide d'installé sur sa machine.
+    - Avoir Nodejs et MongoDB d'installé sur sa machine.
+   	- Avoir Arduino Ide d'installé sur sa machine.
 Installation :
 - Récupérer le code zippé fourni.
 - Dézipper le dossier à l'endroit souhaité.
@@ -20,7 +20,7 @@ Installation :
 - Se rendre dans le dossier Interface et ouvrir un terminal dans celui-ci.
 - Exécuter ```npm install``` pour installer les dépendances nécessaires à Angular.
 - En cas d'échec sous Windows :
-- Ouvrez un terminal powershell en mode administrateur.
+- Ouvrez un terminal PowerShell en mode administrateur.
 - Exécuter la commande ``` set-executionpolicy unrestricted```.
 - Valider avec O.
 
@@ -40,6 +40,12 @@ Pour le Bluetooth :
 -	Noter le numéro de port série utilisé par le module Arduino, de la forme COMx avec x un chiffre pouvant varier.
 -	Remplacer dans le fichier node_server/app.js à la ligne 9 la valeur du port COM que vous avez noté précédemment.
 
+Pour la base de données :
+- Télécharger MongoDB et MongoDB Compass
+- Lancer les serveurs Nodejs comme décrit dans la partie exécution
+- Dans MongoDB Compass connecter-vous à la base de données mongodb://localhost:27017
+- Dans la base sensorDataDB (qui existe si les étapes précédentes ont été réalisé) créer une nouvelle collection nommée "users"
+- Insérer dans la collection (avec le bouton add data) une nouvelle combinaison de login password de la forme ``` {"login":"VotreLogin","password":"VotreMotDePasse"}```
 
 Exécution :
 -	Ouvrir deux terminaux dans le dossier node_server et un dans Interface/projet.
@@ -47,16 +53,16 @@ Exécution :
 -	Ouvrir la page http://localhost:4200
 
 
-Arboresence du projet :
+Arborescence du projet :
     - capteur : contient les fichiers nécessaires à l'Arduino.
-         -librairies : contient les différentes librairies nécessaire au fonctionnment de l'arduino.
-         - capteur.ino : code de l'arduino.
-    - Interface projet : Code de la page web utlisé pour l'affichage des données et des alertes.
-    - node_server : Contient le code nécessairepour les différents serveurs nodejs nécessaire au fonctionnement du projet.
+         -librairies : contient les différentes librairies nécessaires au fonctionnement de l’Arduino.
+         - capteur.ino : code de l’Arduino.
+    - Interface/projet : Code de la page web utilisé pour l'affichage des données et des alertes.
+    - node_server : Contient le code nécessaire pour les différents serveurs nodejs nécessaire au fonctionnement du projet.
         - api.js : code nodejs chargé de la gestion de la base de données.
-        - app.js : code nodejs chargé de la connection entre l'Arduino et la base de données.
+        - app.js : code nodejs chargé de la connexion entre l'Arduino et la base de données.
 
 Auteurs : 
 - Luigi GIUSIANO, Lucas REPPLINGER, Théo GEORGIN, Elisa MARTINELLI, Sophie SOUBRY; 
 - TRIomphe, 
-- 2024 
+- 2024
