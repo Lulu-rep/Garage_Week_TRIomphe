@@ -2,10 +2,10 @@ const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
-const accountSid = '';
+/*const accountSid = '';
 const authToken = '';
 const client = require('twilio')(accountSid, authToken);
-
+*/
 const app = express();
 const cors = require("cors");
 
@@ -84,7 +84,7 @@ app.post("/post-data", (req, res) => {
   };
 
   console.log(sensorData);
-  if (temperature > 30 || dust > 100 || light > 1000) {
+  /*if (temperature > 30 || dust > 100 || light > 1000) {
     // Si oui, envoyez un message via l'API
     client.messages.create({
       body: 'Une des valeurs du capteur dépasse le seuil.',
@@ -92,7 +92,7 @@ app.post("/post-data", (req, res) => {
       to: '+33768159967'
     })
     .then(message => console.log(message.sid));
-  }
+  }*/
 
   db.collection("sensorData")
     .insertOne(sensorData)
