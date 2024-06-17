@@ -59,4 +59,4 @@ Arboresence du projet :
 Auteurs : 
 - Luigi GIUSIANO, Lucas REPPLINGER, Théo GEORGIN, Elisa MARTINELLI, Sophie SOUBRY; 
 - TRIomphe, 
-- 2024. 
+- 2024 
