@@ -33,7 +33,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private router: Router
   ) {}
-
+  // Méthode pour récupérer les données de l'API
   fetchData(url: string) {
     this.dataService.getData(url).subscribe({
       next: (data: SensorData[]) => {
@@ -45,7 +45,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       },
     });
   }
-
+  // Méthode pour récupérer la dernière donnée d'un capteur
   getLastSensorData(data: SensorData[]): SensorData | undefined {
     return data.length > 0
       ? data.reduce((prev, current) =>
@@ -53,7 +53,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
         )
       : undefined;
   }
-
+  // Méthode pour calculer les moyennes des données des capteurs
   calculateAverages(data: SensorData[]) {
     if (data.length > 0) {
       const totalTemperature = data.reduce(
@@ -71,7 +71,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       this.averageDust = parseFloat((totalDust / data.length).toFixed(2));
     }
   }
-
+  // Méthode pour vérifier si les données dépassent les seuils de tolérance
   threshold(sensorData: SensorData): boolean {
     let isAbove = false;
     let message: String[] = [];
@@ -94,7 +94,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.alertMessage = globalMessage;
     return isAbove;
   }
-
+  // Méthode pour démarrer le polling des données de l'API avec un intervalle de 2 secondes
   startPolling(url: string) {
     this.pollingSubscription = interval(2000)
       .pipe(switchMap(() => this.dataService.getData(url)))
@@ -109,13 +109,13 @@ export class DetailsComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+  // Méthode pour vérifier les seuils de tolérance des données
   checkThresholds(data: SensorData[]) {
     this.exceededData = data.filter((sensor) => {
       return sensor.temperature > 30 || sensor.light < 25 || sensor.dust > 2000;
     });
   }
-
+  // Méthode pour initialiser le composant
   ngOnInit(): void {
     this.userService.isConnected().subscribe((isConnected) => {
       if (!isConnected) {
@@ -125,6 +125,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
       }
     });
   }
+  // Méthode pour détruire le composant
   ngOnDestroy(): void {
     if (this.pollingSubscription) {
       this.pollingSubscription.unsubscribe();

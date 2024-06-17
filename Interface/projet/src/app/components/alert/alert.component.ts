@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+// Définition du composant AlertComponent
 @Component({
   selector: 'alert-box',
   templateUrl: './alert.component.html',

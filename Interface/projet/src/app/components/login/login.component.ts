@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { User } from '../../../types';
 import { UserService } from '../../service/user.service';
 
+// Définition du composant LoginComponent
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,7 +18,7 @@ export class LoginComponent {
   user: User = { login: '', password: '' };
 
   constructor(private userService: UserService, private router: Router) {}
-
+  // Méthode pour soumettre le formulaire de connexion
   submit(): void {
     this.userService.login(this.user).subscribe({
       next: () => {

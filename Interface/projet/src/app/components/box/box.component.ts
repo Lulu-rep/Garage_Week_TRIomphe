@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 
+// Définition du composant BoxComponent
 @Component({
   selector: 'app-box',
   standalone: true,
@@ -14,11 +15,11 @@ export class BoxComponent {
   @Input() machineId!: string; // Ajout de la propriété machineId
 
   constructor(private router: Router) {}
-
+  // Méthode pour afficher plus de détails
   showMore() {
     this.router.navigate([`machine-details/${this.machineId}/more-details`]);
   }
-
+  // Méthode pour afficher les valeurs instantanées
   getInstantText(): string {
     switch (this.type) {
       case 'Température':
@@ -33,7 +34,7 @@ export class BoxComponent {
         return 'Instantanée';
     }
   }
-
+  // Méthode pour afficher la moyenne des valeurs
   getAverageText(): string {
     switch (this.type) {
       case 'Température':
