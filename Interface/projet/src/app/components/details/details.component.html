@@ -17,4 +17,8 @@
       [instantValue]="sensorDatas[0].light"
     ></app-box>
   </div>
+  <alert-box
+    *ngIf="treshold(sensorDatas[0])"
+    type="{{ alertMessage }}"
+  ></alert-box>
 </div>

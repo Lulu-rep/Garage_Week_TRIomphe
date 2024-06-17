@@ -1,8 +1,8 @@
 <div class="box">
-    <div class="box-header">
-      <h2>{{ type }}</h2>
-    </div>
-    <p [innerHTML]="getInstantText2()  + averageValue"></p>
-    <p [innerHTML]="getInstantText() + instantValue"></p>
-    <button (click)="showMore()">Plus de données</button>
+  <div class="box-header">
+    <h2>{{ type }}</h2>
   </div>
+  <p [innerHTML]="getAverageText()"></p>
+  <p [innerHTML]="getInstantText()"></p>
+  <button (click)="showMore()">Plus de données</button>
+</div>

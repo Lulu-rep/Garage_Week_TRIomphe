@@ -1,26 +1,29 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { interval, Subscription } from 'rxjs';
 import { SensorData } from '../../../types';
 import { DataService } from '../../service/data.service';
 import { BoxComponent } from '../box/box.component';
 import { UserService } from '../../service/user.service';
-import { Router } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { AlertComponent } from '../alert/alert.component';
 
 @Component({
   selector: 'app-details',
   standalone: true,
   templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css'], // Correction du styleUrls
-  imports: [BoxComponent],
+  styleUrls: ['./details.component.css'],
+  imports: [BoxComponent, AlertComponent, CommonModule],
 })
 export class DetailsComponent implements OnInit, OnDestroy {
   sensorDatas: SensorData[] = [];
-  lastSensorData: SensorData | undefined;
   averageTemperature: number = 0;
   averageLight: number = 0;
   averageDust: number = 0;
   private pollingSubscription: Subscription | undefined;
+
+  alertMessage: String = '';
 
   constructor(
     private dataService: DataService,
@@ -32,7 +35,7 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.dataService.getData(url).subscribe({
       next: (data: SensorData[]) => {
         this.sensorDatas = data;
-        this.lastSensorData = this.getLastSensorData(data);
+        //this.lastSensorData = this.getLastSensorData(data);
         this.calculateAverages(data);
       },
       error: (error) => {
@@ -55,14 +58,39 @@ export class DetailsComponent implements OnInit, OnDestroy {
         (acc, sensor) => acc + sensor.temperature,
         0
       );
-      this.averageTemperature = totalTemperature / data.length;
+      this.averageTemperature = parseFloat(
+        (totalTemperature / data.length).toFixed(2)
+      );
 
       const totalLight = data.reduce((acc, sensor) => acc + sensor.light, 0);
-      this.averageLight = totalLight / data.length;
+      this.averageLight = parseFloat((totalLight / data.length).toFixed(2));
 
       const totalDust = data.reduce((acc, sensor) => acc + sensor.dust, 0);
-      this.averageDust = totalDust / data.length;
+      this.averageDust = parseFloat((totalDust / data.length).toFixed(2));
     }
+  }
+
+  treshold(sensorData: SensorData): boolean {
+    let isAbove = false;
+    let message: String[] = [];
+    if (sensorData.temperature > 30) {
+      isAbove = true;
+      message.push('Température');
+    }
+
+    if (sensorData.light < 25) {
+      isAbove = true;
+      message.push('Lumière');
+    }
+
+    if (sensorData.dust > 1000) {
+      isAbove = true;
+      message.push('Poussière');
+    }
+
+    const globalMessage = message.join(', '); // Combine les messages des seuils dépassés
+    this.alertMessage = globalMessage;
+    return isAbove;
   }
 
   ngOnInit(): void {
@@ -81,7 +109,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: SensorData[]) => {
           this.sensorDatas = data;
-          this.lastSensorData = this.getLastSensorData(data);
           this.calculateAverages(data);
         },
         error: (error) => {

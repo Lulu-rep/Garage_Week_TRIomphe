@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-box',
   standalone: true,
   templateUrl: './box.component.html',
-  styleUrls: ['./box.component.css']
+  styleUrls: ['./box.component.css'],
 })
 export class BoxComponent {
   @Input() type: string = ''; // Type de données : 'Température', 'Poussière', 'Lumière', etc.
@@ -19,27 +19,30 @@ export class BoxComponent {
   getInstantText(): string {
     switch (this.type) {
       case 'Température':
-        return 'Température<br>instantanée :<br>';
+        return 'Température<br>instantanée :<br>' + this.instantValue + '°C';
       case 'Poussière':
-        return 'Taux de poussière<br>instantané :<br>';
+        return (
+          'Taux de poussière<br>instantané :<br>' + this.instantValue + ' pcs/L'
+        );
       case 'Lumière':
-        return 'Luminosité instantanée :<br>';
+        return 'Luminosité instantanée :<br>' + this.instantValue + '%';
       default:
         return 'Instantanée';
     }
   }
 
-  getInstantText2(): string {
+  getAverageText(): string {
     switch (this.type) {
       case 'Température':
-        return 'Température<br>moyenne / j :<br>';
+        return 'Température<br>moyenne / j :<br>' + this.averageValue + '°C';
       case 'Poussière':
-        return 'Taux de poussière<br>moyen / j :<br>';
+        return (
+          'Taux de poussière<br>moyen / j :<br>' + this.averageValue + ' pcs/L'
+        );
       case 'Lumière':
-        return 'Luminosité moyenne / j :<br>';
+        return 'Luminosité moyenne / j :<br>' + this.averageValue + '%';
       default:
         return 'Instantanée';
     }
   }
-
 }
