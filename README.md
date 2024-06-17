@@ -14,7 +14,6 @@ Installation :
 - Récupérer le code zippé fourni.
 - Dézipper le dossier à l'endroit souhaité.
 - Ouvrir un terminal dans le dossier du projet.
-    - Récupérer le code zippé fourni.
 - Se rendre dans le dossier node_server avec ```cd node_server```.
 - Exécuter la commande ```npm install``` pour installer les dépendances des serveurs Nodejs
 - Se rendre dans le dossier Interface et ouvrir un terminal dans celui-ci.
