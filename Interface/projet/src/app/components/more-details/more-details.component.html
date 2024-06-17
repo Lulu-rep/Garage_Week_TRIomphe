@@ -1,0 +1,9 @@
+<div class="container">
+  <div *ngFor="let data of exceededData">
+    <p>Heure: {{ data.date }}</p>
+    <p>
+      Température {{ data.temperature }} °C, Poussière {{ data.dust }} pcs/L,
+      Lumière {{ data.light }}%
+    </p>
+  </div>
+</div>

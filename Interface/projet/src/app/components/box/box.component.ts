@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-box',
@@ -10,10 +11,12 @@ export class BoxComponent {
   @Input() type: string = ''; // Type de données : 'Température', 'Poussière', 'Lumière', etc.
   @Input() averageValue?: number = 0; // Propriété pour la moyenne
   @Input() instantValue?: number = 0; // Propriété pour la valeur instantanée
+  @Input() machineId!: string; // Ajout de la propriété machineId
+
+  constructor(private router: Router) {}
 
   showMore() {
-    console.log(`Afficher plus de données pour ${this.type}`);
-    // Logique pour afficher plus de données spécifiques au type
+    this.router.navigate([`machine-details/${this.machineId}/more-details`]);
   }
 
   getInstantText(): string {

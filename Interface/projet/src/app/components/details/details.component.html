@@ -5,20 +5,24 @@
       [type]="'Température'"
       [averageValue]="averageTemperature"
       [instantValue]="sensorDatas[0].temperature"
+      [machineId]="'1'"
     ></app-box>
     <app-box
       [type]="'Poussière'"
       [averageValue]="averageDust"
       [instantValue]="sensorDatas[0].dust"
+      [machineId]="'1'"
     ></app-box>
     <app-box
       [type]="'Lumière'"
       [averageValue]="averageLight"
       [instantValue]="sensorDatas[0].light"
+      [machineId]="'1'"
     ></app-box>
   </div>
   <alert-box
-    *ngIf="treshold(sensorDatas[0])"
+    *ngIf="threshold(sensorDatas[0])"
     type="{{ alertMessage }}"
   ></alert-box>
+  <button (click)="exportToCSV()">Exporter les données en CSV</button>
 </div>

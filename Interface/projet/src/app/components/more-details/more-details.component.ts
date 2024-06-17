@@ -1,22 +1,19 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { interval, Subscription } from 'rxjs';
 import { SensorData } from '../../../types';
+import { Subscription, interval, switchMap } from 'rxjs';
 import { DataService } from '../../service/data.service';
-import { BoxComponent } from '../box/box.component';
 import { UserService } from '../../service/user.service';
-import { AlertComponent } from '../alert/alert.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-details',
+  selector: 'app-more-details',
   standalone: true,
-  templateUrl: './details.component.html',
-  styleUrls: ['./details.component.css'],
-  imports: [BoxComponent, AlertComponent, CommonModule],
+  imports: [CommonModule],
+  templateUrl: './more-details.component.html',
+  styleUrl: './more-details.component.css',
 })
-export class DetailsComponent implements OnInit, OnDestroy {
+export class MoreDetailsComponent {
   sensorDatas: SensorData[] = [];
   averageTemperature: number = 0;
   averageLight: number = 0;
@@ -38,7 +35,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
     this.dataService.getData(url).subscribe({
       next: (data: SensorData[]) => {
         this.sensorDatas = data;
-        this.calculateAverages(data);
       },
       error: (error) => {
         console.error('Error fetching data:', error);
@@ -52,24 +48,6 @@ export class DetailsComponent implements OnInit, OnDestroy {
           new Date(prev.date) > new Date(current.date) ? prev : current
         )
       : undefined;
-  }
-
-  calculateAverages(data: SensorData[]) {
-    if (data.length > 0) {
-      const totalTemperature = data.reduce(
-        (acc, sensor) => acc + sensor.temperature,
-        0
-      );
-      this.averageTemperature = parseFloat(
-        (totalTemperature / data.length).toFixed(2)
-      );
-
-      const totalLight = data.reduce((acc, sensor) => acc + sensor.light, 0);
-      this.averageLight = parseFloat((totalLight / data.length).toFixed(2));
-
-      const totalDust = data.reduce((acc, sensor) => acc + sensor.dust, 0);
-      this.averageDust = parseFloat((totalDust / data.length).toFixed(2));
-    }
   }
 
   threshold(sensorData: SensorData): boolean {
@@ -95,6 +73,12 @@ export class DetailsComponent implements OnInit, OnDestroy {
     return isAbove;
   }
 
+  checkThresholds(data: SensorData[]) {
+    this.exceededData = data.filter((sensor) => {
+      return sensor.temperature > 30 || sensor.light < 25 || sensor.dust > 2000;
+    });
+  }
+
   startPolling(url: string) {
     this.pollingSubscription = interval(2000)
       .pipe(switchMap(() => this.dataService.getData(url)))
@@ -102,44 +86,11 @@ export class DetailsComponent implements OnInit, OnDestroy {
         next: (data: SensorData[]) => {
           this.sensorDatas = data;
           this.checkThresholds(this.sensorDatas);
-          this.calculateAverages(data);
         },
         error: (error) => {
           console.error('Error fetching data:', error);
         },
       });
-  }
-
-  checkThresholds(data: SensorData[]) {
-    this.exceededData = data.filter((sensor) => {
-      return sensor.temperature > 30 || sensor.light < 25 || sensor.dust > 2000;
-    });
-  }
-
-  exportToCSV() {
-    const headers = ['Timestamp', 'Temperature', 'Light', 'Dust'];
-    const rows = this.exceededData.map((sensor) => [
-      sensor.date,
-      sensor.temperature,
-      sensor.light,
-      sensor.dust,
-    ]);
-
-    let csvContent = 'data:text/csv;charset=utf-8,';
-    csvContent += headers.join(',') + '\n';
-
-    rows.forEach((rowArray) => {
-      const row = rowArray.join(',');
-      csvContent += row + '\n';
-    });
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'exceeded_data.csv');
-    document.body.appendChild(link);
-
-    link.click();
   }
 
   ngOnInit(): void {
@@ -150,10 +101,5 @@ export class DetailsComponent implements OnInit, OnDestroy {
         this.startPolling('http://localhost:3000/get-data');
       }
     });
-  }
-  ngOnDestroy(): void {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-    }
   }
 }
