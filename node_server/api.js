@@ -2,8 +2,8 @@ const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
-/*const accountSid = '';
-const authToken = '';
+const accountSid = 'ACbb1f1d4fda7a823baccf7ef987d13dd2';
+const authToken = 'db37d513cc6661b317bf5027b326503c';
 const client = require('twilio')(accountSid, authToken);
 */
 const app = express();
@@ -64,6 +64,8 @@ app.get("/get-data", (req, res) => {
     });
 });
 
+let lastMessageTime = null;
+const delay = 60000; // 60 seconds delay
 app.post("/post-data", (req, res) => {
   const { temperature, humidity, dust, light } = req.body;
   if (
@@ -84,15 +86,30 @@ app.post("/post-data", (req, res) => {
   };
 
   console.log(sensorData);
-  /*if (temperature > 30 || dust > 100 || light > 1000) {
-    // Si oui, envoyez un message via l'API
-    client.messages.create({
-      body: 'Une des valeurs du capteur dépasse le seuil.',
-      from: '+13135137763',
-      to: '+33768159967'
-    })
-    .then(message => console.log(message.sid));
-  }*/
+
+  if (temperature > 30 || dust > 2000 || light < 25) {
+    if (!lastMessageTime || Date.now() - lastMessageTime > delay) {
+      let message = 'Une des valeurs du capteur dépasse le seuil.';
+
+      if (temperature > 30) {
+        message = 'La température dépasse le seuil.';
+      } else if (dust > 2000) {
+        message = 'La poussière dépasse le seuil.';
+      } else if (light <25) {
+        message = 'La lumière dépasse le seuil.';
+      }
+
+      client.messages.create({
+        body: message,
+        from: '+13135137763',
+        to: '+33768159967'
+      })
+        .then(message => {
+          console.log(message.sid);
+          lastMessageTime = Date.now();
+        });
+    }
+  }
 
   db.collection("sensorData")
     .insertOne(sensorData)
